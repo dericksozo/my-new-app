@@ -36,4 +36,4 @@ Ready to start building? Check out the comprehensive guides:
 - **[Deploying Your App](http://docs.sim.dune.com/idx/deployment)** - Deploy your app
 - **[Adding ABIs](https://docs.sim.dune.com/idx/cli#sim-abi)** - How to add contract ABIs
 - **[Writing Listeners](https://docs.sim.dune.com/idx/listener)** - Define your indexing logic
-- **[CLI Reference](https://docs.sim.dune.com/idx/cli)** - All available commands
+- **[CLI Reference](https://docs.sim.dune.com/idx/cli)** - All available commands# my-new-app
