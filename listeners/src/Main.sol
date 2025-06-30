@@ -11,23 +11,23 @@ contract Triggers is BaseTriggers {
         addTrigger(ChainIdContract(130, 0x1F98400000000000000000000000000000000003), listener.triggerOnCreatePoolFunction());
         addTrigger(ChainIdContract(8453, 0x33128a8fC17869897dcE68Ed026d694621f6FDfD), listener.triggerOnCreatePoolFunction());
 
-        // Listen for Moonbirds Transfer events on Ethereum mainnet
+        // Listen for Moonbirds Approval events on Ethereum mainnet
         addTrigger(
             ChainIdContract(1, 0x23581767a106ae21c074b2276D25e5C3e136a68b),
-            listener.triggerOnTransferEvent()
+            listener.triggerOnApprovalEvent()
         );
     }
 }
 
 /// Index calls to the UniswapV3Factory.createPool function on Ethereum
 /// To hook on more function calls, specify that this listener should implement that interface and follow the compiler errors.
-contract Listener is UniswapV3Factory$OnCreatePoolFunction, Moonbirds$OnTransferEvent {
+contract Listener is UniswapV3Factory$OnCreatePoolFunction, Moonbirds$OnApprovalEvent {
     /// Emitted events are indexed.
     /// To change the data which is indexed, modify the event or add more events.
     event PoolCreated(uint64 chainId, address caller, address pool, address token0, address token1, uint24 fee);
 
-    /// Emitted whenever a Moonbirds NFT is transferred.
-    event BirdTransferred(uint64 chainId, address from, address to, uint256 tokenId, uint256 blockNumber);
+    /// Emitted whenever a Moonbirds NFT approval event occurs.
+    event BirdApproved(uint64 chainId, address owner, address approved, uint256 tokenId, uint256 blockNumber);
 
     /// The handler called whenever the UniswapV3Factory.createPool function is called.
     /// Within here you write your indexing specific logic (e.g., call out to other contracts to get more information).
@@ -43,15 +43,15 @@ contract Listener is UniswapV3Factory$OnCreatePoolFunction, Moonbirds$OnTransfer
         emit PoolCreated(uint64(block.chainid), ctx.txn.call.callee, outputs.pool, inputs.tokenA, inputs.tokenB, inputs.fee);
     }
 
-    /// Handler for Moonbirds Transfer events.
-    function onTransferEvent(
+    /// Handler for Moonbirds Approval events.
+    function onApprovalEvent(
         EventContext memory /* ctx */,
-        Moonbirds$TransferEventParams memory inputs
+        Moonbirds$ApprovalEventParams memory inputs
     )
         external
         override
     {
-        emit BirdTransferred(uint64(block.chainid), inputs.from, inputs.to, inputs.tokenId, block.number);
+        emit BirdApproved(uint64(block.chainid), inputs.owner, inputs.approved, inputs.tokenId, block.number);
     }
 }
 
